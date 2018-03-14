@@ -1,0 +1,37 @@
+version: '3'
+services:
+  # application:
+  #   image: golang:1.9.2
+  #   volumes: 
+  #     - ./:/usr/src/myapp
+  #   working_dir: /usr/src/myapp
+  #   command: go run main.go
+  # # ffmpeg:
+  # #   image: jrottenberg/ffmpeg
+  facebox1:
+    image: machinebox/facebox
+    environment:
+      - MB_KEY=${MB_KEY}
+    ports:
+      - "8081:8080"
+  tagbox1:
+    image: machinebox/tagbox
+    environment:
+      - MB_KEY=${MB_KEY}
+    ports:
+      - "8082:8080"
+  nudebox1:
+    image: machinebox/nudebox
+    environment:
+      - MB_KEY=${MB_KEY}
+    ports:
+      - "8083:8080"
+  videobox:
+    image: machinebox/videobox
+    environment:
+      - MB_KEY=${MB_KEY}
+      - MB_VIDEOBOX_FACEBOX_ADDR=http://facebox1:8080
+      - MB_VIDEOBOX_TAGBOX_ADDR=http://tagbox1:8080
+      - MB_VIDEOBOX_NUDEBOX_ADDR=http://nudebox1:8080
+    ports:
+      - "8080:8080"
